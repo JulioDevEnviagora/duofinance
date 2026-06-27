@@ -1,0 +1,5 @@
+node_modules/
+_test.mjs
+_shot-*.png
+*.local
+.DS_Store

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="DuoFinance — organização financeira para casais. Cartões, contas fixas, salários e ciclos de pagamento." />
+  <title>DuoFinance · Finanças do casal</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%91%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body data-theme="dark">
+  <!-- App Shell -->
+  <div id="app" class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">💑</div>
+        <div class="brand-text">
+          <span class="brand-name">DuoFinance</span>
+          <span class="brand-sub">finanças do casal</span>
+        </div>
+      </div>
+      <nav class="nav" id="nav">
+        <button class="nav-item active" data-view="dashboard"><span class="nav-ico">📊</span><span>Visão geral</span></button>
+        <button class="nav-item" data-view="cycles"><span class="nav-ico">🗓️</span><span>Ciclos de pagamento</span></button>
+        <button class="nav-item" data-view="transactions"><span class="nav-ico">💸</span><span>Lançamentos</span></button>
+        <button class="nav-item" data-view="cards"><span class="nav-ico">💳</span><span>Cartões</span></button>
+        <button class="nav-item" data-view="fixed"><span class="nav-ico">📌</span><span>Contas fixas</span></button>
+        <button class="nav-item" data-view="salaries"><span class="nav-ico">💰</span><span>Salários</span></button>
+        <button class="nav-item" data-view="categories"><span class="nav-ico">🏷️</span><span>Categorias</span></button>
+        <button class="nav-item" data-view="settings"><span class="nav-ico">⚙️</span><span>Configurações</span></button>
+      </nav>
+      <div class="sidebar-foot">
+        <div class="couple-chip" id="coupleChip"></div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn only-mobile" id="menuBtn" aria-label="Menu">☰</button>
+        <div class="month-switch">
+          <button class="icon-btn" id="prevMonth" aria-label="Mês anterior">‹</button>
+          <button class="month-label" id="monthLabel">junho 2026</button>
+          <button class="icon-btn" id="nextMonth" aria-label="Próximo mês">›</button>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-btn" id="themeBtn" title="Alternar tema">🌙</button>
+          <button class="primary-btn" id="quickAdd">＋ Lançar</button>
+        </div>
+      </header>
+
+      <div class="view-wrap" id="viewWrap"><!-- views injected here --></div>
+    </main>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="bn-item active" data-view="dashboard"><span>📊</span><label>Geral</label></button>
+    <button class="bn-item" data-view="cycles"><span>🗓️</span><label>Ciclos</label></button>
+    <button class="bn-item bn-add" id="bnAdd"><span>＋</span></button>
+    <button class="bn-item" data-view="transactions"><span>💸</span><label>Gastos</label></button>
+    <button class="bn-item" data-view="cards"><span>💳</span><label>Cartões</label></button>
+  </nav>
+
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h3 id="modalTitle">Título</h3>
+        <button class="icon-btn" id="modalClose" aria-label="Fechar">✕</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-wrap" id="toastWrap"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="./assets/js/store.js"></script>
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
