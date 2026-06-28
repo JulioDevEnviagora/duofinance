@@ -76,8 +76,8 @@
         <div class="card pad">
           <div class="section-title" style="margin-top:0">Gastos por categoria</div>
           ${catRows.length ? `
-            <div class="grid cols-2" style="grid-template-columns: 200px 1fr; align-items:center; gap:24px;">
-              <div class="chart-box" style="height:200px"><canvas id="catChart"></canvas></div>
+            <div class="cat-chart-row">
+              <div class="chart-box" style="height:190px"><canvas id="catChart"></canvas></div>
               <div class="legend">
                 ${catRows.slice(0, 7).map(([cid, v]) => {
                   const c = catOf(cid);
@@ -95,11 +95,13 @@
             ${upcoming.length ? upcoming.slice(0, 6).map((f) => {
               const c = catOf(f.categoryId); const late = f.dueDay < today.getDate();
               return `<div class="row">
-                <div class="ic" style="background:${alpha(c.color, .16)}">${c.icon}</div>
+                <div class="ic" style="background:${alpha(c.color, .15)}">${c.icon}</div>
                 <div class="meta"><div class="t">${esc(f.desc)}</div>
-                  <div class="s"><span class="${late ? 'neg' : ''}">vence dia ${f.dueDay}${late ? ' · atrasada' : ''}</span><span class="pill">${esc(personOf(f.personId).name)}</span></div></div>
-                <div class="amt">${money(f.amount)}</div>
-                <button class="btn-line" style="padding:7px 12px" data-pay-fixed="${f.id}">Pagar</button>
+                  <div class="s"><span class="${late ? 'neg' : ''}">vence dia ${f.dueDay}${late ? ' · atrasada' : ''}</span><span>${esc(personOf(f.personId).name)}</span></div></div>
+                <div class="row-end">
+                  <div class="amt">${money(f.amount)}</div>
+                  <button class="chip-btn" data-pay-fixed="${f.id}">Pagar</button>
+                </div>
               </div>`;
             }).join('') : emptyState('🎉', 'Tudo pago!', 'Nenhuma conta fixa pendente neste mês.')}
           </div>
@@ -222,17 +224,19 @@
               <div class="list">
                 ${items.length ? items.map((it) => `
                   <div class="row">
-                    <div class="ic" style="background:${alpha(it.cat.color, .16)}">${it.cat.icon}</div>
-                    <div class="meta"><div class="t">${esc(it.desc)} ${it.fixed ? '<span class="tag" style="background:var(--surface-2);color:var(--text-dim)">📌 fixa</span>' : ''}</div>
-                      <div class="s"><span>dia ${it.day}</span><span class="pill">${esc(it.person.name)}</span>${it.fixed ? `<span class="${it.paid ? 'pos' : 'warnclr'}">${it.paid ? '✓ paga' : 'pendente'}</span>` : ''}</div></div>
-                    <div class="amt neg">- ${money(it.amount)}</div>
-                    ${it.fixed ? `<button class="mini-btn" data-pay-fixed="${it.id}" title="Marcar paga/pendente">${it.paid ? '↩️' : '✓'}</button>` : ''}
-                  </div>`).join('') : `<div class="empty" style="padding:24px"><div class="e-t">Sem contas neste ciclo 🎈</div></div>`}
+                    <div class="ic" style="background:${alpha(it.cat.color, .15)}">${it.cat.icon}</div>
+                    <div class="meta"><div class="t">${esc(it.desc)} ${it.fixed ? '<span class="tag">📌 fixa</span>' : ''}</div>
+                      <div class="s"><span>dia ${it.day}</span><span>${esc(it.person.name)}</span>${it.fixed ? `<span class="${it.paid ? 'pos' : 'warnclr'}">${it.paid ? '✓ paga' : 'pendente'}</span>` : ''}</div></div>
+                    <div class="row-end">
+                      <div class="amt neg">− ${money(it.amount)}</div>
+                      ${it.fixed ? `<button class="mini-btn" data-pay-fixed="${it.id}" title="Marcar paga/pendente">${it.paid ? '↩️' : '✓'}</button>` : ''}
+                    </div>
+                  </div>`).join('') : `<div class="empty" style="padding:22px"><div class="e-t">Sem contas neste ciclo 🎈</div></div>`}
               </div>
-              ${c.income ? `<div class="row" style="border-top:1px dashed var(--border); margin-top:6px;">
-                <div class="ic" style="background:${alpha('#22c55e', .16)}">💰</div>
-                <div class="meta"><div class="t">Entradas do ciclo</div><div class="s">salários e receitas</div></div>
-                <div class="amt pos">+ ${money(c.income)}</div></div>` : ''}
+              ${c.income ? `<div class="row" style="border-top:1px dashed var(--border); margin-top:4px;">
+                <div class="ic" style="background:${alpha('#2bb98a', .15)}">💰</div>
+                <div class="meta"><div class="t">Entradas do ciclo</div><div class="s"><span>salários e receitas</span></div></div>
+                <div class="row-end"><div class="amt pos">+ ${money(c.income)}</div></div></div>` : ''}
             </div>
           </div>`;
         }).join('')}
@@ -265,17 +269,19 @@
     const c = catOf(t.categoryId), p = personOf(t.personId);
     const card = t.cardId ? S.card(t.cardId) : null;
     const inc = t.kind === 'income';
-    const inst = t.installment ? ` · ${t.installment.n}/${t.installment.of}x` : '';
+    const inst = t.installment ? ` ${t.installment.n}/${t.installment.of}x` : '';
     return `<div class="row">
-      <div class="ic" style="background:${alpha(inc ? '#22c55e' : c.color, .16)}">${inc ? '💰' : c.icon}</div>
+      <div class="ic" style="background:${alpha(inc ? '#2bb98a' : c.color, .15)}">${inc ? '💰' : c.icon}</div>
       <div class="meta">
         <div class="t">${esc(t.desc || c.name)}</div>
-        <div class="s"><span>${fmtDate(t.date)}</span><span class="pill">${esc(c.name)}</span><span class="pill" style="border-color:${alpha(p.color,.5)}">${esc(p.name)}</span>${card ? `<span class="pill">💳 ${esc(card.name)}${inst}</span>` : ''}</div>
+        <div class="s"><span>${fmtDate(t.date)}</span><span>${esc(c.name)}</span><span class="who"><i class="dot" style="background:${p.color}"></i>${esc(p.name)}</span>${card ? `<span>💳 ${esc(card.name)}${inst}</span>` : ''}</div>
       </div>
-      <div class="amt ${inc ? 'pos' : 'neg'}">${inc ? '+' : '-'} ${money(t.amount)}</div>
-      <div class="actions">
-        <button class="mini-btn" data-edit-tx="${t.id}">✏️</button>
-        <button class="mini-btn" data-del-tx="${t.id}">🗑️</button>
+      <div class="row-end">
+        <div class="amt ${inc ? 'pos' : 'neg'}">${inc ? '+' : '−'} ${money(t.amount)}</div>
+        <div class="row-actions">
+          <button class="mini-btn" data-edit-tx="${t.id}">✏️</button>
+          <button class="mini-btn" data-del-tx="${t.id}">🗑️</button>
+        </div>
       </div>
     </div>`;
   }
@@ -331,18 +337,20 @@
         <div class="list">
           ${bills.length ? bills.map((f) => {
             const c = catOf(f.categoryId); const paid = S.fixedPaid(f.id, mk); const inc = (f.kind || 'expense') === 'income';
-            return `<div class="row">
-              <div class="switch ${f.active ? 'on' : ''}" data-toggle-fixed="${f.id}"><i></i></div>
-              <div class="ic" style="background:${alpha(c.color, .16)}; ${f.active ? '' : 'opacity:.4'}">${c.icon}</div>
-              <div class="meta" style="${f.active ? '' : 'opacity:.5'}">
-                <div class="t">${esc(f.desc)} ${inc ? '<span class="tag" style="background:var(--surface-2);color:var(--good)">entrada</span>' : ''}</div>
-                <div class="s"><span>vence dia ${f.dueDay}</span><span class="pill">${esc(c.name)}</span><span class="pill">${esc(personOf(f.personId).name)}</span></div>
+            return `<div class="row ${f.active ? '' : 'is-off'}">
+              <div class="ic" style="background:${alpha(c.color, .15)}">${c.icon}</div>
+              <div class="meta">
+                <div class="t">${esc(f.desc)} ${inc ? '<span class="tag" style="color:var(--good)">entrada</span>' : ''}</div>
+                <div class="s"><span>vence dia ${f.dueDay}</span><span>${esc(c.name)}</span><span>${esc(personOf(f.personId).name)}</span></div>
               </div>
-              <div class="amt ${inc ? 'pos' : ''}">${money(f.amount)}</div>
-              <button class="btn-line" style="padding:7px 12px; ${paid ? 'border-color:var(--good); color:var(--good)' : ''}" data-pay-fixed="${f.id}">${paid ? '✓ Paga' : 'Pendente'}</button>
-              <div class="actions">
-                <button class="mini-btn" data-edit-fixed="${f.id}">✏️</button>
-                <button class="mini-btn" data-del-fixed="${f.id}">🗑️</button>
+              <div class="row-end">
+                <div class="amt ${inc ? 'pos' : ''}">${money(f.amount)}</div>
+                <button class="chip-btn ${paid ? 'done' : ''}" data-pay-fixed="${f.id}">${paid ? '✓ Paga' : 'Pendente'}</button>
+                <div class="row-actions">
+                  <div class="switch ${f.active ? 'on' : ''}" data-toggle-fixed="${f.id}" title="Ativar/pausar"><i></i></div>
+                  <button class="mini-btn" data-edit-fixed="${f.id}">✏️</button>
+                  <button class="mini-btn" data-del-fixed="${f.id}">🗑️</button>
+                </div>
               </div>
             </div>`;
           }).join('') : emptyState('📌', 'Nenhuma conta fixa', 'Cadastre aluguel, internet, assinaturas... tudo que se repete.')}
@@ -375,11 +383,13 @@
             </div>
             <div class="list">
               ${sals.length ? sals.map((s) => `<div class="row">
-                <div class="ic" style="background:${alpha('#22c55e', .16)}">💼</div>
+                <div class="ic" style="background:${alpha('#2bb98a', .15)}">💼</div>
                 <div class="meta"><div class="t">Pagamento dia ${s.payday}</div>
                   <div class="s"><span class="${s.received ? 'pos' : 'warnclr'}">${s.received ? '✓ recebido' : 'a receber'}</span></div></div>
-                <div class="amt pos">${money(s.amount)}</div>
-                <div class="actions"><button class="mini-btn" data-edit-salary="${s.id}">✏️</button><button class="mini-btn" data-del-salary="${s.id}">🗑️</button></div>
+                <div class="row-end">
+                  <div class="amt pos">${money(s.amount)}</div>
+                  <div class="row-actions"><button class="mini-btn" data-edit-salary="${s.id}">✏️</button><button class="mini-btn" data-del-salary="${s.id}">🗑️</button></div>
+                </div>
               </div>`).join('') : `<div class="empty" style="padding:22px"><div class="e-t">Nada registrado</div><div style="font-size:13px">Adicione os recebimentos do mês.</div></div>`}
             </div>
             <button class="btn-line" style="width:100%; margin-top:12px" data-add-salary data-person="${p.id}">＋ Adicionar para ${esc(p.name)}</button>
