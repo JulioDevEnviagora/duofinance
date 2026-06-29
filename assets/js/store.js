@@ -7,28 +7,28 @@
   let _seq = 0;
   const uid = () => 'id' + Math.random().toString(36).slice(2, 9) + (++_seq);
 
-  const PALETTE = ['#7c5cff', '#25d0a8', '#ff5c7a', '#ffb454', '#4f9dff', '#ff7ac6', '#9b7bff', '#2dd4bf', '#f97316', '#22c55e'];
+  const PALETTE = ['#1ec48d', '#3b6fe0', '#f4795b', '#e0a83c', '#23b8c7', '#ef5da8', '#5a6ad4', '#d97706', '#7c8aa0', '#9b6df0'];
 
   function defaultData() {
-    const julio = { id: uid(), name: 'Julio', color: '#7c5cff', paydays: [5, 20] };
-    const par = { id: uid(), name: 'Esposa', color: '#ff7ac6', paydays: [15, 30] };
+    const julio = { id: uid(), name: 'Julio', color: '#3b6fe0', paydays: [5, 20] };
+    const par = { id: uid(), name: 'Esposa', color: '#f4795b', paydays: [15, 30] };
     const cat = (name, icon, color, kind = 'expense') => ({ id: uid(), name, icon, color, kind });
     return {
       version: 1,
       people: [julio, par],
       cards: [],
       categories: [
-        cat('Moradia', '🏠', '#7c5cff'),
-        cat('Mercado', '🛒', '#25d0a8'),
-        cat('Transporte', '🚗', '#4f9dff'),
-        cat('Alimentação', '🍔', '#ff7ac6'),
-        cat('Saúde', '💊', '#2dd4bf'),
-        cat('Lazer', '🎮', '#ffb454'),
-        cat('Educação', '📚', '#9b7bff'),
-        cat('Assinaturas', '📺', '#f97316'),
-        cat('Contas', '🧾', '#ff5c7a'),
-        cat('Salário', '💼', '#22c55e', 'income'),
-        cat('Outros', '✨', '#6b7398'),
+        cat('Moradia', '🏠', '#3b6fe0'),
+        cat('Mercado', '🛒', '#1ec48d'),
+        cat('Transporte', '🚗', '#23b8c7'),
+        cat('Alimentação', '🍔', '#f4795b'),
+        cat('Saúde', '💊', '#10b6a0'),
+        cat('Lazer', '🎮', '#e0a83c'),
+        cat('Educação', '📚', '#5a6ad4'),
+        cat('Assinaturas', '📺', '#9b6df0'),
+        cat('Contas', '🧾', '#ef5da8'),
+        cat('Salário', '💼', '#1ec48d', 'income'),
+        cat('Outros', '✨', '#7c8aa0'),
       ],
       transactions: [],
       fixedBills: [],

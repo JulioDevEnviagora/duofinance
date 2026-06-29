@@ -3,36 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-  <meta name="theme-color" content="#0b1020" />
+  <meta name="theme-color" content="#0f1311" />
   <meta name="description" content="DuoFinance — organização financeira para casais. Cartões, contas fixas, salários e ciclos de pagamento." />
   <title>DuoFinance · Finanças do casal</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%91%3C/text%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2312b981'/%3E%3Ctext x='16' y='22' font-size='18' font-family='monospace' font-weight='700' text-anchor='middle' fill='%23042419'%3ED%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./assets/fonts/fonts.css" />
+  <link rel="stylesheet" href="./assets/icons/regular.css" />
+  <link rel="stylesheet" href="./assets/icons/fill.css" />
   <link rel="stylesheet" href="./assets/css/styles.css" />
 </head>
 <body data-theme="dark">
-  <!-- App Shell -->
   <div id="app" class="app">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="brand">
-        <div class="brand-logo">💑</div>
+        <div class="brand-logo"><i class="ph-fill ph-heartbeat"></i></div>
         <div class="brand-text">
           <span class="brand-name">DuoFinance</span>
           <span class="brand-sub">finanças do casal</span>
         </div>
       </div>
       <nav class="nav" id="nav">
-        <button class="nav-item active" data-view="dashboard"><span class="nav-ico">📊</span><span>Visão geral</span></button>
-        <button class="nav-item" data-view="cycles"><span class="nav-ico">🗓️</span><span>Ciclos de pagamento</span></button>
-        <button class="nav-item" data-view="transactions"><span class="nav-ico">💸</span><span>Lançamentos</span></button>
-        <button class="nav-item" data-view="cards"><span class="nav-ico">💳</span><span>Cartões</span></button>
-        <button class="nav-item" data-view="fixed"><span class="nav-ico">📌</span><span>Contas fixas</span></button>
-        <button class="nav-item" data-view="salaries"><span class="nav-ico">💰</span><span>Salários</span></button>
-        <button class="nav-item" data-view="categories"><span class="nav-ico">🏷️</span><span>Categorias</span></button>
-        <button class="nav-item" data-view="settings"><span class="nav-ico">⚙️</span><span>Configurações</span></button>
+        <button class="nav-item active" data-view="dashboard"><i class="nav-ico ph ph-squares-four"></i><span>Visão geral</span></button>
+        <button class="nav-item" data-view="cycles"><i class="nav-ico ph ph-calendar-dots"></i><span>Ciclos de pagamento</span></button>
+        <button class="nav-item" data-view="transactions"><i class="nav-ico ph ph-receipt"></i><span>Lançamentos</span></button>
+        <button class="nav-item" data-view="cards"><i class="nav-ico ph ph-credit-card"></i><span>Cartões</span></button>
+        <button class="nav-item" data-view="fixed"><i class="nav-ico ph ph-repeat"></i><span>Contas fixas</span></button>
+        <button class="nav-item" data-view="salaries"><i class="nav-ico ph ph-hand-coins"></i><span>Salários</span></button>
+        <button class="nav-item" data-view="categories"><i class="nav-ico ph ph-tag"></i><span>Categorias</span></button>
+        <button class="nav-item" data-view="settings"><i class="nav-ico ph ph-gear-six"></i><span>Configurações</span></button>
       </nav>
       <div class="sidebar-foot">
         <div class="couple-chip" id="coupleChip"></div>
@@ -42,29 +41,29 @@
     <!-- Main -->
     <main class="main">
       <header class="topbar">
-        <button class="icon-btn only-mobile" id="menuBtn" aria-label="Menu">☰</button>
+        <button class="icon-btn only-mobile" id="menuBtn" aria-label="Menu"><i class="ph ph-list"></i></button>
         <div class="month-switch">
-          <button class="icon-btn" id="prevMonth" aria-label="Mês anterior">‹</button>
+          <button class="icon-btn" id="prevMonth" aria-label="Mês anterior"><i class="ph ph-caret-left"></i></button>
           <button class="month-label" id="monthLabel">junho 2026</button>
-          <button class="icon-btn" id="nextMonth" aria-label="Próximo mês">›</button>
+          <button class="icon-btn" id="nextMonth" aria-label="Próximo mês"><i class="ph ph-caret-right"></i></button>
         </div>
         <div class="topbar-actions">
-          <button class="ghost-btn" id="themeBtn" title="Alternar tema">🌙</button>
-          <button class="primary-btn" id="quickAdd">＋ Lançar</button>
+          <button class="ghost-btn" id="themeBtn" aria-label="Alternar tema"><i class="ph ph-moon"></i></button>
+          <button class="primary-btn" id="quickAdd"><i class="ph ph-plus"></i><span>Lançar</span></button>
         </div>
       </header>
 
-      <div class="view-wrap" id="viewWrap"><!-- views injected here --></div>
+      <div class="view-wrap" id="viewWrap"></div>
     </main>
   </div>
 
   <!-- Mobile bottom nav -->
   <nav class="bottom-nav" id="bottomNav">
-    <button class="bn-item active" data-view="dashboard"><span>📊</span><label>Geral</label></button>
-    <button class="bn-item" data-view="cycles"><span>🗓️</span><label>Ciclos</label></button>
-    <button class="bn-item bn-add" id="bnAdd"><span>＋</span></button>
-    <button class="bn-item" data-view="transactions"><span>💸</span><label>Gastos</label></button>
-    <button class="bn-item" data-view="cards"><span>💳</span><label>Cartões</label></button>
+    <button class="bn-item active" data-view="dashboard"><i class="ph ph-squares-four"></i><label>Geral</label></button>
+    <button class="bn-item" data-view="cycles"><i class="ph ph-calendar-dots"></i><label>Ciclos</label></button>
+    <button class="bn-item bn-add" id="bnAdd" aria-label="Novo lançamento"><i class="ph ph-plus"></i></button>
+    <button class="bn-item" data-view="transactions"><i class="ph ph-receipt"></i><label>Gastos</label></button>
+    <button class="bn-item" data-view="cards"><i class="ph ph-credit-card"></i><label>Cartões</label></button>
   </nav>
 
   <!-- Modal -->
@@ -72,16 +71,15 @@
     <div class="modal" id="modal" role="dialog" aria-modal="true">
       <div class="modal-head">
         <h3 id="modalTitle">Título</h3>
-        <button class="icon-btn" id="modalClose" aria-label="Fechar">✕</button>
+        <button class="icon-btn" id="modalClose" aria-label="Fechar"><i class="ph ph-x"></i></button>
       </div>
       <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast-wrap" id="toastWrap"></div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="./assets/vendor/chart.umd.min.js"></script>
   <script src="./assets/js/store.js"></script>
   <script src="./assets/js/app.js"></script>
 </body>
