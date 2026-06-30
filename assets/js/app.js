@@ -45,6 +45,30 @@
   function whoAv(p, sm) { return `<span class="who-av${sm ? ' sm' : ''}" style="--c:${p.color}">${initial(p.name)}</span>`; }
   function cssVar(name) { return getComputedStyle(document.body).getPropertyValue(name).trim(); }
 
+  // ---------- credit card invoice (closing-day aware, not calendar month) ----------
+  // A card's invoice for a given month closes on `card.closingDay`. Purchases made
+  // after that day belong to the NEXT invoice, not the current calendar month.
+  // Cards without a closingDay fall back to plain calendar-month grouping.
+  function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+  function invoicePeriod(card, year, month) {
+    if (!card.closingDay) {
+      return { start: S.ymd(new Date(year, month, 1)), end: S.ymd(new Date(year, month, daysInMonth(year, month))) };
+    }
+    const closingDay = Math.min(card.closingDay, daysInMonth(year, month));
+    const end = new Date(year, month, closingDay);
+    const pm = new Date(year, month - 1, 1);
+    const prevClosingDay = Math.min(card.closingDay, daysInMonth(pm.getFullYear(), pm.getMonth()));
+    const start = new Date(pm.getFullYear(), pm.getMonth(), prevClosingDay + 1);
+    return { start: S.ymd(start), end: S.ymd(end) };
+  }
+  function cardInvoiceTx(card, year, month) {
+    const { start, end } = invoicePeriod(card, year, month);
+    return S.transactions().filter((t) => t.cardId === card.id && t.kind === 'expense' && t.date >= start && t.date <= end);
+  }
+  function cardInvoiceTotal(card, year, month) {
+    return cardInvoiceTx(card, year, month).reduce((a, t) => a + t.amount, 0);
+  }
+
   // ===================================================================
   // VIEWS
   // ===================================================================
@@ -59,7 +83,7 @@
     const totalIncome = income + salaryIncome;
     const expense = tx.filter((t) => t.kind === 'expense').reduce((a, t) => a + t.amount, 0);
     const fixedTotal = S.fixedBills().filter((f) => f.active && (f.kind || 'expense') === 'expense').reduce((a, f) => a + f.amount, 0);
-    const cardInvoice = tx.filter((t) => t.kind === 'expense' && t.cardId).reduce((a, t) => a + t.amount, 0);
+    const cardInvoice = S.cards().reduce((a, card) => a + cardInvoiceTotal(card, state.month.getFullYear(), state.month.getMonth()), 0);
     const balance = totalIncome - expense;
 
     const byCat = {};
@@ -124,7 +148,7 @@
         <div class="card pad">
           <div class="section-title" style="margin:0 0 16px">Uso dos cartões</div>
           ${S.cards().length ? S.cards().map((card) => {
-            const used = monthTx(mk).filter((t) => t.cardId === card.id && t.kind === 'expense').reduce((a, t) => a + t.amount, 0);
+            const used = cardInvoiceTotal(card, state.month.getFullYear(), state.month.getMonth());
             const pct = card.limit ? Math.min(100, (used / card.limit) * 100) : 0;
             const clr = pct > 80 ? 'var(--neg)' : pct > 50 ? 'var(--warn)' : 'var(--pos)';
             return `<div class="usage">
@@ -287,7 +311,6 @@
 
   // ---------- CARDS ----------
   views.cards = function () {
-    const mk = monthKey(state.month);
     const cards = S.cards();
     const el = document.createElement('div');
     el.innerHTML = `
@@ -296,9 +319,11 @@
       </div>
       <div class="grid cols-3">
         ${cards.map((card) => {
-          const used = monthTx(mk).filter((t) => t.cardId === card.id && t.kind === 'expense').reduce((a, t) => a + t.amount, 0);
+          const used = cardInvoiceTotal(card, state.month.getFullYear(), state.month.getMonth());
           const pct = card.limit ? Math.min(100, (used / card.limit) * 100) : 0;
           const owner = personOf(card.ownerId);
+          const period = invoicePeriod(card, state.month.getFullYear(), state.month.getMonth());
+          const periodLabel = card.closingDay ? `${fmtDate(period.start)} a ${fmtDate(period.end)}` : MONTHS[state.month.getMonth()].slice(0, 3);
           return `<div class="cc" style="--c1:${card.color || '#3b6fe0'}; --c2:${shade(card.color || '#3b6fe0')}">
             <div class="cc-actions">
               <button class="mini-btn" data-edit-card="${card.id}" aria-label="Editar">${ph('ph-pencil-simple')}</button>
@@ -310,7 +335,7 @@
               <div class="cc-name">${esc(card.name)}</div>
             </div>
             <div>
-              <div class="cc-meta"><span>Fatura ${MONTHS[state.month.getMonth()].slice(0,3)}</span><span>${money(used)} / ${money(card.limit)}</span></div>
+              <div class="cc-meta"><span>Fatura ${periodLabel}</span><span>${money(used)} / ${money(card.limit)}</span></div>
               <div class="cc-bar"><i style="width:${pct}%"></i></div>
               <div class="cc-meta" style="margin-top:8px"><span>Fecha dia ${card.closingDay || '-'}</span><span>Vence dia ${card.dueDay || '-'}</span></div>
             </div>
