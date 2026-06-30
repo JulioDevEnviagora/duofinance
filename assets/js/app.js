@@ -441,6 +441,7 @@
             <input data-person-paydays="${p.id}" value="${(p.paydays || []).join(', ')}" placeholder="ex: 5, 20"></div>
           <div class="field" style="margin-top:12px"><label>Cor</label>
             <div class="swatch-row">${S.PALETTE.map((c) => `<div class="swatch ${c === p.color ? 'on' : ''}" style="background:${c}" data-person-color="${p.id}" data-color="${c}"></div>`).join('')}</div></div>
+          <button class="primary-btn" data-save-person="${p.id}" style="width:100%;justify-content:center;margin-top:16px">${ph('ph-check')}<span>Salvar</span></button>
         </div>`).join('')}
       </div>
 
@@ -783,8 +784,21 @@
     else if (d.delSalary) confirmDel('Excluir este registro de salário?', () => S.removeSalary(d.delSalary));
   });
 
+  function savePerson(id) {
+    const nameEl = $(`[data-person-name="${id}"]`);
+    const payEl = $(`[data-person-paydays="${id}"]`);
+    const name = (nameEl ? nameEl.value : '').trim();
+    if (!name) return toast('O nome não pode ficar vazio', 'err');
+    const days = (payEl ? payEl.value : '').split(',').map((x) => parseInt(x.trim())).filter((x) => x >= 1 && x <= 31);
+    S.updatePerson(id, { name, paydays: days.length ? days : [1] });
+    toast('Alterações salvas');
+    paintCouple();
+    render();
+  }
+
   function handleSettingsClicks(e) {
     if (e.target.closest('#themeSwitch')) return toggleTheme();
+    const sp = e.target.closest('[data-save-person]'); if (sp) return savePerson(sp.dataset.savePerson);
     const sc = e.target.closest('[data-person-color]'); if (sc) { S.updatePerson(sc.dataset.personColor, { color: sc.dataset.color }); render(); paintCouple(); return; }
     if (e.target.closest('#btnExport')) return doExport();
     if (e.target.closest('#btnImport')) return $('#fileImport').click();
