@@ -189,6 +189,8 @@ i.ph, i[class*=" ph-"], i[class^="ph-"] { display: inline-flex; line-height: 1; 
 .cols-4 { grid-template-columns: repeat(4, 1fr); }
 .cols-3 { grid-template-columns: repeat(3, 1fr); }
 .cols-2 { grid-template-columns: repeat(2, 1fr); }
+/* dashboard section pairs (chart + list) — need full width below desktop */
+.dash-pair { grid-template-columns: repeat(2, 1fr); }
 
 /* Stat tiles — elevation communicates the key money figures */
 .stat { padding: 18px; border-radius: var(--r-card); border: 1px solid var(--line); background: var(--surface); box-shadow: var(--shadow); }
@@ -352,37 +354,61 @@ i.ph, i[class*=" ph-"], i[class^="ph-"] { display: inline-flex; line-height: 1; 
 .bottom-nav { display: none; }
 .only-mobile { display: none; }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 1080px) { .cols-4 { grid-template-columns: repeat(2,1fr); } }
-@media (max-width: 920px) {
+/* ============================================================
+   Responsive tiers
+   Desktop  (> 900px, sidebar): full grids
+   Tablet   (641-900px, shell): two columns, rows stay inline
+   Mobile   (<= 640px, shell):  single column, rows stack
+   ============================================================ */
+
+/* Small desktop / tablet landscape (sidebar still visible) */
+@media (max-width: 1180px) { .cols-4 { grid-template-columns: repeat(2, 1fr); } }
+/* Dashboard chart+list pairs stack below desktop so rows keep full width */
+@media (max-width: 1024px) { .dash-pair { grid-template-columns: 1fr; } }
+
+/* Shell switches to off-canvas sidebar + bottom nav (tablet portrait + phones) */
+@media (max-width: 900px) {
   .app { grid-template-columns: 1fr; }
-  .sidebar { position: fixed; left: 0; top: 0; z-index: 60; width: 248px; transform: translateX(-105%); transition: transform .26s var(--ease); background: var(--surface); }
+  .sidebar { position: fixed; left: 0; top: 0; z-index: 60; width: 260px; transform: translateX(-105%); transition: transform .26s var(--ease); background: var(--surface); }
   .sidebar.open { transform: none; }
   .only-mobile { display: grid; }
-  .view-wrap { padding: 18px 16px 104px; }
-  .topbar { padding: 12px 14px; }
   #quickAdd { display: none; }
-  .cols-3, .cols-2, .cat-split { grid-template-columns: 1fr; }
-  .cat-split { gap: 12px; }
-  .view-head { margin-bottom: 18px; }
-  .view-head h2 { font-size: 21px; }
+  .topbar { padding: 12px 18px; }
+  .view-wrap { padding: 22px 22px 110px; margin: 0 auto; }
+  .view-head { margin-bottom: 20px; }
+  .cat-split { grid-template-columns: 1fr; gap: 14px; }
   .bottom-nav { display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: color-mix(in srgb, var(--surface) 92%, transparent); border-top: 1px solid var(--line); padding: 7px 6px calc(7px + env(safe-area-inset-bottom)); justify-content: space-around; backdrop-filter: blur(12px); }
-  .bn-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--faint); font-size: 21px; padding: 4px 12px; border-radius: var(--r-ctrl); transition: var(--t); }
+  .bn-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--faint); font-size: 21px; padding: 4px 14px; border-radius: var(--r-ctrl); transition: var(--t); }
   .bn-item label { font-size: 9.5px; font-weight: 500; }
   .bn-item.active { color: var(--accent-ink); }
   .bn-add { background: var(--accent); color: var(--on-accent); width: 48px; height: 48px; border-radius: 15px; justify-content: center; margin-top: -16px; font-size: 23px; box-shadow: var(--shadow); }
   .bn-add:active { transform: scale(.94); }
 }
-@media (max-width: 560px) {
+
+/* Tablet portrait: keep two columns, rows stay on one line */
+@media (min-width: 641px) and (max-width: 900px) {
+  .cols-3 { grid-template-columns: repeat(2, 1fr); }
+  .bottom-nav { padding-left: 10vw; padding-right: 10vw; }
+}
+
+/* Mobile: single column, rows stack the amount + actions to a 2nd line */
+@media (max-width: 640px) {
+  .view-wrap { padding: 16px 16px 104px; }
+  .view-head { margin-bottom: 18px; }
+  .view-head h2 { font-size: 21px; }
   .cols-4 { grid-template-columns: 1fr 1fr; }
+  .cols-3, .cols-2 { grid-template-columns: 1fr; }
   .pad { padding: 16px; }
   .row { grid-template-columns: auto 1fr; gap: 11px; padding: 13px 2px; }
   .row > .row-end { grid-column: 1 / -1; justify-content: space-between; border-top: 1px dashed var(--line); padding-top: 10px; margin-top: 2px; }
   .row .meta .t { white-space: normal; }
   .field-row { grid-template-columns: 1fr; }
-  .stat .stat-value { font-size: 21px; }
+  .stat { padding: 15px; }
+  .stat .stat-value { font-size: 20px; }
 }
-@media (max-width: 380px) { .cols-4 { grid-template-columns: 1fr; } }
+
+/* Only very narrow phones drop stat tiles to a single column */
+@media (max-width: 340px) { .cols-4 { grid-template-columns: 1fr; } }
 
 .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 55; display: none; }
 .scrim.show { display: block; }

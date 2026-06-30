@@ -82,7 +82,7 @@
         ${statCard('ph-credit-card', 'Fatura nos cartões', cardInvoice, `Fixas previstas: ${money(fixedTotal)}`, '')}
       </div>
 
-      <div class="grid cols-2" style="margin-top:14px; align-items:start;">
+      <div class="grid dash-pair" style="margin-top:14px; align-items:start;">
         <div class="card pad">
           <div class="section-title" style="margin:0 0 16px">Gastos por categoria</div>
           ${catRows.length ? `
@@ -116,7 +116,7 @@
         </div>
       </div>
 
-      <div class="grid cols-2" style="margin-top:14px; align-items:start;">
+      <div class="grid dash-pair" style="margin-top:14px; align-items:start;">
         <div class="card pad">
           <div class="section-title" style="margin:0 0 16px">Entradas e saídas (6 meses)</div>
           <div class="chart-box"><canvas id="trendChart"></canvas></div>
